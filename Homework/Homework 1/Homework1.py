@@ -35,3 +35,18 @@ the smallest and the error is the largest.
 The factored form plot is more numerically accurate since it is not losing as much accuracy
 with floating point arithmatic. 
 """
+
+deltas = 10.0 ** np.arange(-16, 1)
+x = np.pi
+
+badEx = np.cos(x + deltas) - np.cos(x)
+goodEx = -2*np.sin(x + deltas/2.0)*np.sin(deltas/2.0)
+
+
+plt.plot(deltas, badEx, label = 'bad function')
+plt.plot(deltas, goodEx, label = 'good function')
+plt.xlabel('X')
+plt.legend()
+plt.xscale('log')
+plt.yscale('log')
+plt.show()
