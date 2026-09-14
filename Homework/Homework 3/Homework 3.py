@@ -179,5 +179,5 @@ def fixedpt(f,x0,tol,Nmax):
     ier = 1
     return [xstar, ier, count]
 
-#driver2()
+driver2()
 driver3()
