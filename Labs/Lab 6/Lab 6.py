@@ -55,7 +55,7 @@ def driverPreLab():
 
 
 def driverLab():
-    x0 = np.array([1, 0])
+    x0 = np.array([0.1, 0.1, -0.1])
         
     Nmax = 500
     tol = 1e-10
@@ -78,23 +78,40 @@ def driverLab():
     print('Newton: took this many seconds:',elapsed/50)
     print('Netwon: number of iterations is:',its)
 
-def evalF(x): 
-# vector function that you want to find the roots of
+# def evalF(x): 
+# # vector function that you want to find the roots of
 
-    F = np.zeros(2)
+#     F = np.zeros(2)
     
-    F[0] = 4*x[0]**2 + x[1]**2 - 4
-    F[1] = x[0] + x[1] - np.sin(x[0] - x[1])
+#     F[0] = 4*x[0]**2 + x[1]**2 - 4
+#     F[1] = x[0] + x[1] - np.sin(x[0] - x[1])
  
+#     return F
+
+def evalF(x):
+    F = np.zeros(3)
+
+    F[0] = 3*x[0] - np.cos(x[0]*x[2]) - 0.5
+    F[1] = x[0] - 81*(x[1]+0.1)**2 + np.sin(x[2]) + 1.06
+    F[2] = np.exp(-x[0]*x[1]) + 20*x[2] + (10*np.pi - 3)/3
+
     return F
     
-def evalJ(x): 
-# Jacobian of the vector function you want to find the roots of
+# def evalJ(x): 
+# # Jacobian of the vector function you want to find the roots of
     
-    J = np.array([[8*x[0], 2*x[1]], 
-        [1 - np.cos(x[0] - x[1]), 1 + np.cos(x[0] - x[1])]])
+#     J = np.array([[8*x[0], 2*x[1]], 
+#         [1 - np.cos(x[0] - x[1]), 1 + np.cos(x[0] - x[1])]])
+
+#     return J
+
+def evalJ(x):
+    J = np.array([[3 + np.sin(x[0]*x[2])*x[2], 0, np.sin(x[0]*x[2])*x[0]],
+                  [1, -162*(x[1]+0.1), np.cos(x[2])],
+                  [-x[1]*np.exp(-x[0]*x[1]), -x[0]*np.exp(-x[0]*x[1]), 20]])
 
     return J
+
 
 
 def Newton(x0,tol,Nmax):
@@ -158,13 +175,13 @@ def slackerNewton(x0, tol, Nmax):
             return[xstar, ier, its+1]
                
         x0 = x1
-        if (np.abs(np.linalg.norm(J)) > 2): # condition when we decide to update J
-            J = evalJ(x1)
-            Jinv = inv(J)
-
-        # if (its % 2 == 0):
+        # if (np.abs(np.linalg.norm(J)) > 2): # condition when we decide to update J
         #     J = evalJ(x1)
         #     Jinv = inv(J)
+
+        if (its % 2 == 0):
+            J = evalJ(x1)
+            Jinv = inv(J)
         
     xstar = x1
     ier = 1
