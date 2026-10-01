@@ -263,4 +263,8 @@ def newtonWError(f,fp,p0,tol,Nmax):
 
 
 #driver3()
+<<<<<<< HEAD
 driver4()
+=======
+driver4()
+>>>>>>> 8229c37df37792979c96c2a724ca057cc6dba136
