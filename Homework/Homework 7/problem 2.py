@@ -6,7 +6,7 @@ def driver():
     xvals = np.linspace(-1, 1, 1001)
     f = 1 / (1 + (10*xvals)**2) # real function
 
-    N = 15
+    N = 15 # number of data points
 
     xnodes = np.linspace(-1, 1, N) # interpolation data points
     ynodes = 1 / (1 + (10*xnodes)**2)
@@ -15,10 +15,10 @@ def driver():
     for j in range(N):
         w[j] = 1 / np.prod(xnodes[j] - xnodes[np.arange(N) != j])
 
-    diff = xvals[:, None] - xnodes[None, :]
-    phi = np.prod(diff, axis=1)
+    diff = xvals[:, None] - xnodes[None, :] # x - xj for the phi function
+    phi = np.prod(diff, axis=1) # phi function
 
-    p = 0
+    p = 0 # creating p(x)
     for j in range(N):
         p += w[j] * ynodes[j] / (xvals - xnodes[j])
     p *= phi
