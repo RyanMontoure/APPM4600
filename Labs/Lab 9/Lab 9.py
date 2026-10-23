@@ -18,30 +18,22 @@ def eval_legendre(n, x):
         
     return p
 
-def eval_phifw(phi, f, w):
-    return phi * f * w
+def eval_phifw(x, phi, f, w):
+    return phi(x) * f(x) * w(x)
 
-def eval_phiphiw(phi, w):
-    return (phi**2) * w
+def eval_phiphiw(x, phi, w):
+    return (phi(x)**2) * w(x)
 
-def eval_numerator(phi, f, w, a, b):
-    numer = quad(eval_phifw(phi, f, w), a, b)
-    return numer
-
-def eval_denomenator(phi, w, a, b):
-    denom = quad(eval_phiphiw(phi, w), a, b)
-    return (denom, 1)
-
-def eval_coefficient(numer, denom):
-    coeff = numer / denom
-    err = 1
-    return (coeff, err)
+def eval_coefficient(phi_j, f, a, b, w):
+    numer,_ = quad(eval_phifw, a, b, args=(phi_j, f, w))
+    denom,_ = quad(eval_phiphiw, a, b, args=(phi_j, w))
+    return numer / denom
 
 
 def driver():
 
 #  function you want to approximate
-    f = lambda x: math.exp(x)
+    f = lambda x: 1 / (1 + x**2)
 
 # Interval of interest    
     a = -1
@@ -92,13 +84,8 @@ def eval_legendre_expansion(f,a,b,w,n,x):
       # make a function handle for evaluating phi_j(x)
       phi_j = lambda x: eval_legendre(j,x)[j]
       # make a function handle for evaluating phi_j^2(x)*w(x)
-      phi_j_sq = lambda x: eval_phiphiw(phi_j(x), w(x))
-      # use the quad function from scipy to evaluate normalizations
-      norm_fac,err = eval_denomenator(phi_j, w(x), a, b)
-      # make a function handle for phi_j(x)*f(x)*w(x)/norm_fac
-      func_j = lambda x: eval_numerator(phi_j, f(x), w(x), a, b)
       # use the quad function from scipy to evaluate coeffs
-      aj,err = eval_coefficient(func_j, norm_fac)
+      aj = eval_coefficient(phi_j, f, a, b, w)
       # accumulate into pval
       pval = pval+aj*p[j]
        
